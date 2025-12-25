@@ -3,54 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusStore | Tu App Marketplace</title>
-    <link rel="stylesheet" href="style.css">
+    <title>NexusStore | Ultimate App Marketplace</title>
+    <!-- Lucide Icons -->
     <script src="unpkg.com"></script>
+    <style>
+        :root {
+            --bg: #05070a;
+            --surface: #11141d;
+            --surface-hover: #1c212e;
+            --primary: #3b82f6;
+            --accent: #00f2ff;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.03);
+            --gradient: linear-gradient(135deg, #3b82f6 0%, #00f2ff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--surface-hover); border-radius: 10px; }
+
+        /* --- Header & Nav --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 7, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-container {
+            flex: 0 1 500px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--glass);
+            padding: 12px 20px 12px 45px;
+            border-radius: 14px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+        }
+
+        /* --- Main Layout --- */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('images.unsplash.com');
+            background-size: cover;
+            border-radius: 30px;
+            padding: 4rem 3rem;
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; max-width: 600px; line-height: 1.1; }
+        .hero p { color: #cbd5e1; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; }
+
+        /* --- Categories --- */
+        .category-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .cat-card {
+            background: var(--surface);
+            padding: 10px 24px;
+            border-radius: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid var(--glass);
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .cat-card:hover, .cat-card.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* --- App Grid --- */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .app-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--glass);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            background: var(--surface-hover);
+            transform: scale(1.03);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .app-icon {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #2d3748;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .app-info h3 { font-size: 1.1rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .app-info p { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 12px; }
+
+        .app-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rating { color: #fbbf24; font-size: 0.9rem; display: flex; align-items: center; gap: 4px; }
+
+        .btn-download {
+            background: var(--glass);
+            border: none;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .app-card:hover .btn-download {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: 5rem;
+            padding: 3rem 5%;
+            background: var(--surface);
+            text-align: center;
+            border-top: 1px solid var(--glass);
+            color: var(--text-dim);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .search-container { order: 3; flex: 1 0 100%; margin-top: 1rem; }
+            header { flex-wrap: wrap; }
+        }
+    </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">NEXUS<span>STORE</span></div>
-        <div class="search-bar">
-            <input type="text" placeholder="Buscar aplicaciones, juegos y más..." id="appSearch">
+    <header>
+        <div class="logo-area">
+            <i data-lucide="layers"></i>
+            <span>NEXUS STORE</span>
+        </div>
+        
+        <div class="search-container">
             <i data-lucide="search"></i>
+            <input type="text" id="searchInput" placeholder="Explorar apps, juegos y mods...">
         </div>
-        <div class="nav-actions">
-            <button class="btn-icon"><i data-lucide="bell"></i></button>
-            <div class="user-profile"></div>
-        </div>
-    </nav>
 
-    <main class="container">
-        <!-- Hero Section -->
+        <div style="display: flex; gap: 15px;">
+            <i data-lucide="user" style="cursor: pointer;"></i>
+            <i data-lucide="menu" style="cursor: pointer;"></i>
+        </div>
+    </header>
+
+    <main>
         <section class="hero">
-            <div class="hero-content">
-                <h1>Descubre el futuro de las Apps</h1>
-                <p>Sin fronteras, sin restricciones. El marketplace descentralizado para Android.</p>
-                <button class="btn-primary">Explorar Ahora</button>
+            <h1>Libertad total en cada descarga.</h1>
+            <p>La alternativa más segura y rápida para obtener tus aplicaciones favoritas sin restricciones regionales.</p>
+            <div style="display: flex; gap: 10px;">
+                <button class="cat-card active" style="background: var(--primary); border:none;">Instalar Nexus APK</button>
             </div>
         </section>
 
-        <!-- Categories -->
-        <section class="section">
-            <h2 class="section-title">Categorías Populares</h2>
-            <div class="categories-grid" id="categories">
-                <!-- Inyectado por JS -->
-            </div>
-        </section>
+        <div class="category-scroll" id="categoryContainer">
+            <!-- Dinámico -->
+        </div>
 
-        <!-- Featured Apps -->
-        <section class="section">
+        <section>
             <div class="section-header">
-                <h2 class="section-title">Aplicaciones Destacadas</h2>
-                <a href="#" class="see-all">Ver todas</a>
+                <h2>Tendencias Globales</h2>
+                <span style="color: var(--primary); cursor: pointer;">Ver todo</span>
             </div>
-            <div class="apps-grid" id="featuredApps">
-                <!-- Inyectado por JS -->
+            <div class="grid" id="appGrid">
+                <!-- Dinámico -->
             </div>
         </section>
     </main>
 
-    <script src="script.js"></script>
+    <footer>
+        <p>&copy; 2025 NexusStore Technologies. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // --- BASE DE DATOS MOCK ---
+        const APPS_DB = [
+            { id: 1, name: "WhatsApp Messenger", dev: "Meta", cat: "Social", rate: 4.8, icon: "💬", downloads: "5B+" },
+            { id: 2, name: "Apex Legends Mobile", dev: "EA", cat: "Juegos", rate: 4.6, icon: "🎮", downloads: "10M+" },
+            { id: 3, name: "CapCut Editor", dev: "ByteDance", cat: "Video", rate: 4.9, icon: "🎬", downloads: "500M+" },
+            { id: 4, name: "Spotify Premium", dev: "Spotify", cat: "Música", rate: 4.7, icon: "🎵", downloads: "1B+" },
+            { id: 5, name: "Binance Crypto", dev: "Binance", cat: "Finanzas", rate: 4.5, icon: "🪙", downloads: "100M+" },
+            { id: 6, name: "Lightroom CC", dev: "Adobe", cat: "Foto", rate: 4.8, icon: "📸", downloads: "100M+" },
+            { id: 7, name: "Discord", dev: "Discord Inc", cat: "Social", rate: 4.7, icon: "👾", downloads: "100M+" },
+            { id: 8, name: "Telegram", dev: "Telegram FZ", cat: "Social", rate: 4.9, icon: "✈️", downloads: "1B+" },
+        ];
+
+        const CATEGORIES = ["Todos", "Juegos", "Social", "Video", "Música", "Finanzas", "Foto", "Productividad"];
+
+        // --- MOTOR DE RENDERIZADO ---
+        function init() {
+            lucide.createIcons();
+            renderCategories();
+            renderApps(APPS_DB);
+            setupSearch();
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = CATEGORIES.map(cat => `
+                <div class="cat-card ${cat === 'Todos' ? 'active' : ''}" onclick="filterByCategory('${cat}', this)">
+                    ${cat}
+                </div>
+            `).join('');
+        }
+
+        function renderApps(apps) {
+            const grid = document.getElementById('appGrid');
+            grid.innerHTML = apps.map((app, index) => `
+                <div class="app-card" style="animation-delay: ${index * 0.05}s">
+                    <div class="app-icon">${app.icon}</div>
+                    <div class="app-info">
+                        <h3>${app.name}</h3>
+                        <p>${app.dev} • ${app.cat}</p>
+                    </div>
+                    <div class="app-footer">
+                        <div class="rating">
+                            <i data-lucide="star" style="width:14px; fill: #fbbf24;"></i>
+                            ${app.rate}
+                        </div>
+                        <button class="btn-download">OBTENER</button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons(); // Re-renderizar iconos en nuevas tarjetas
+        }
+
+        // --- LÓGICA DE FILTRADO Y BÚSQUEDA ---
+        function filterByCategory(category, element) {
+            // UI Update
+            document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+
+            // Data Filter
+            const filtered = category === "Todos" 
+                ? APPS_DB 
+                : APPS_DB.filter(app => app.cat === category);
+            renderApps(filtered);
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = APPS_DB.filter(app => 
+                    app.name.toLowerCase().includes(term) || 
+                    app.cat.toLowerCase().includes(term)
+                );
+                renderApps(filtered);
+            });
+        }
+
+        // Iniciar App
+        window.onload = init;
+    </script>
 </body>
 </html>
