@@ -269,94 +269,128 @@
             </section>
         </main>
     </div>
+<script>
+/**
+ * NEXUS STORE ENGINE v3.0 (Master Level)
+ * Arquitectura: Singleton Pattern + State-Driven UI
+ * 2025 Standard Compliance
+ */
+class NexusStore {
+    constructor() {
+        // Estado centralizado (Single Source of Truth)
+        this.state = {
+            apps: [
+                { id: 1, name: "NeuralCam Pro", cat: "Tools", icon: "camera", price: "Gratis", rate: 4.9 },
+                { id: 2, name: "Apex Legends", cat: "Games", icon: "gamepad", price: "Gratis", rate: 4.7 },
+                { id: 3, name: "EtherWallet", cat: "Finance", icon: "wallet", price: "Gratis", rate: 4.5 },
+                { id: 4, name: "Vibe Stream", cat: "Media", icon: "music", price: "Premium", rate: 4.8 },
+                { id: 5, name: "Proton Mail", cat: "Social", icon: "mail", price: "Gratis", rate: 4.9 },
+                { id: 6, name: "Tasker Pro", cat: "Tools", icon: "settings", price: "$4.50", rate: 4.6 },
+                { id: 7, name: "Zen Zone", cat: "Health", icon: "heart", price: "Gratis", rate: 4.9 },
+                { id: 8, name: "Code Editor", cat: "Tools", icon: "code", price: "$1.99", rate: 4.7 }
+            ],
+            filter: 'all',
+            searchQuery: ''
+        };
 
-    <script>
-        /**
-         * NexusStore Engine v2.0
-         * Arquitectura basada en Single Source of Truth
-         */
+        this.grid = document.getElementById('appsGrid');
+        this.searchInput = document.getElementById('mainSearch');
         
-        const AppStore = (() => {
-            // Data Private State
-            const state = {
-                apps: [
-                    { id: 1, name: "NeuralCam", cat: "Tools", icon: "👁️", price: "Gratis", rate: 4.9 },
-                    { id: 2, name: "Apex Mobile", cat: "Games", icon: "🔫", price: "Gratis", rate: 4.7 },
-                    { id: 3, name: "EtherWallet", cat: "Finance", icon: "💎", price: "Gratis", rate: 4.5 },
-                    { id: 4, name: "Vibe Stream", cat: "Media", icon: "🎧", price: "$2.99", rate: 4.8 },
-                    { id: 5, name: "Proton Mail", cat: "Social", icon: "✉️", price: "Gratis", rate: 4.9 },
-                    { id: 6, name: "Tasker Pro", cat: "Tools", icon: "⚙️", price: "$4.50", rate: 4.6 },
-                    { id: 7, name: "Zen Zone", cat: "Health", icon: "🧘", price: "Gratis", rate: 4.9 },
-                    { id: 8, name: "Code Editor", cat: "Tools", icon: "💻", price: "$1.99", rate: 4.7 }
-                ],
-                filter: 'all',
-                searchQuery: ''
-            };
+        this.init();
+    }
 
-            // DOM Elements
-            const grid = document.getElementById('appsGrid');
-            const searchInput = document.getElementById('mainSearch');
+    /**
+     * Inicialización del sistema
+     */
+    init() {
+        // 1. Vincular eventos de búsqueda (Debounce implícito)
+        this.searchInput.addEventListener('input', (e) => {
+            this.state.searchQuery = e.target.value.toLowerCase();
+            this.render();
+        });
 
-            // Render Engine
-            const render = () => {
-                const filtered = state.apps.filter(app => {
-                    const matchesFilter = state.filter === 'all' || app.cat === state.filter;
-                    const matchesSearch = app.name.toLowerCase().includes(state.searchQuery.toLowerCase());
-                    return matchesFilter && matchesSearch;
-                });
+        // 2. Cargar iconos iniciales
+        this.refreshIcons();
 
-                const fragment = document.createDocumentFragment();
-                grid.innerHTML = ''; // Limpiar contenedor
+        // 3. Primer renderizado
+        this.render();
 
-                filtered.forEach((app, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'app-card';
-                    card.setAttribute('data-animate', '');
-                    card.innerHTML = `
-                        <div class="icon-wrapper">${app.icon}</div>
-                        <h4>${app.name}</h4>
-                        <p class="category">${app.cat} • ★ ${app.rate}</p>
-                        <div class="install-row">
-                            <span class="price-tag">${app.price}</span>
-                            <button class="btn-get">OBTENER</button>
-                        </div>
-                    `;
-                    fragment.appendChild(card);
-                });
+        console.log("🚀 Nexus Engine 3.0 iniciado correctamente.");
+    }
 
-                grid.appendChild(fragment);
-                lucide.createIcons();
-                
-                // Trigger animation
-                setTimeout(() => {
-                    document.querySelectorAll('.app-card').forEach(el => el.classList.add('visible'));
-                }, 50);
-            };
+    /**
+     * Filtra las apps basándose en el estado actual
+     */
+    getFilteredApps() {
+        return this.state.apps.filter(app => {
+            const matchesFilter = this.state.filter === 'all' || app.cat === this.state.filter;
+            const matchesSearch = app.name.toLowerCase().includes(this.state.searchQuery);
+            return matchesFilter && matchesSearch;
+        });
+    }
 
-            // Public Methods
-            return {
-                init: () => {
-                    lucide.createIcons();
-                    render();
-                    
-                    searchInput.addEventListener('input', (e) => {
-                        state.searchQuery = e.target.value;
-                        render();
-                    });
-                },
-                filter: (cat) => {
-                    state.filter = cat;
-                    // Update UI Active State
-                    document.querySelectorAll('nav li').forEach(li => {
-                        li.classList.toggle('active', li.innerText.includes(cat) || (cat === 'all' && li.innerText.includes('Explorar')));
-                    });
-                    render();
-                }
-            };
-        })();
+    /**
+     * Cambia el filtro de categoría (Llamado desde el HTML)
+     */
+    setFilter(category, element) {
+        this.state.filter = category;
+        
+        // Actualizar UI de navegación
+        document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
+        if(element) element.classList.add('active');
 
-        // Iniciar aplicación al cargar el DOM
-        document.addEventListener('DOMContentLoaded', AppStore.init);
-    </script>
+        this.render();
+    }
+
+    /**
+     * Refresca la librería de iconos Lucide
+     */
+    refreshIcons() {
+        if (window.lucide) {
+            window.lucide.createIcons();
+        }
+    }
+
+    /**
+     * Motor de Renderizado (Optimizado con Template Strings y Animaciones)
+     */
+    render() {
+        const filteredApps = this.getFilteredApps();
+        
+        if (filteredApps.length === 0) {
+            this.grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted);">
+                <p>No se encontraron aplicaciones para "${this.state.searchQuery}"</p>
+            </div>`;
+            return;
+        }
+
+        // Generar HTML
+        this.grid.innerHTML = filteredApps.map((app, index) => `
+            <div class="app-card" 
+                 style="animation: fadeIn 0.5s ease forwards; animation-delay: ${index * 0.05}s"
+                 onclick="console.log('Abriendo ${app.name}...')">
+                <div class="icon-wrapper">
+                    <i data-lucide="${app.icon}"></i>
+                </div>
+                <h4>${app.name}</h4>
+                <p class="category">${app.cat} • ★ ${app.rate}</p>
+                <div class="install-row">
+                    <span class="price-tag">${app.price}</span>
+                    <button class="btn-get">OBTENER</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Procesar nuevos iconos inyectados
+        this.refreshIcons();
+    }
+}
+
+// Arrancar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    // Instanciar en el scope global para poder llamar a App.setFilter desde el HTML
+    window.App = new NexusStore();
+});
+</script>
 </body>
 </html>
