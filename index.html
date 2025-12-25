@@ -228,11 +228,10 @@
             </div>
             <nav>
                 <ul>
-                    <li class="active" onclick="AppStore.filter('all')"><i data-lucide="layout-grid"></i> Explorar</li>
-                    <li onclick="AppStore.filter('Games')"><i data-lucide="gamepad-2"></i> Juegos</li>
-                    <li onclick="AppStore.filter('Social')"><i data-lucide="share-2"></i> Redes</li>
-                    <li onclick="AppStore.filter('Tools')"><i data-lucide="wrench"></i> Herramientas</li>
-                    <li onclick="AppStore.filter('Finance')"><i data-lucide="wallet"></i> Finanzas</li>
+<li class="active" onclick="App.setFilter('all', this)"><i data-lucide="layout-grid"></i> Explorar</li>
+<li onclick="App.setFilter('Games', this)"><i data-lucide="gamepad-2"></i> Juegos</li>
+<li onclick="App.setFilter('Social', this)"><i data-lucide="share-2"></i> Redes</li>
+
                 </ul>
             </nav>
         </aside>
