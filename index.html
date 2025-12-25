@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusStore | Tu App Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="unpkg.com"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">NEXUS<span>STORE</span></div>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar aplicaciones, juegos y más..." id="appSearch">
+            <i data-lucide="search"></i>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon"><i data-lucide="bell"></i></button>
+            <div class="user-profile"></div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Descubre el futuro de las Apps</h1>
+                <p>Sin fronteras, sin restricciones. El marketplace descentralizado para Android.</p>
+                <button class="btn-primary">Explorar Ahora</button>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section class="section">
+            <h2 class="section-title">Categorías Populares</h2>
+            <div class="categories-grid" id="categories">
+                <!-- Inyectado por JS -->
+            </div>
+        </section>
+
+        <!-- Featured Apps -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Aplicaciones Destacadas</h2>
+                <a href="#" class="see-all">Ver todas</a>
+            </div>
+            <div class="apps-grid" id="featuredApps">
+                <!-- Inyectado por JS -->
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
